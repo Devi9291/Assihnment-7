@@ -1,0 +1,47 @@
+import tensorflow as tf
+from tensorflow.keras import layers, models, optimizers
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Step 2: Dataset Preparation
+# Assume you have a directory structure with train and validation folders containing images.
+
+# Step 3: CNN Architecture
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(height, width, 3)))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Flatten())
+model.add(layers.Dense(128, activation='relu'))
+model.add(layers.Dropout(0.5))
+model.add(layers.Dense(num_classes, activation='softmax'))
+
+# Step 4: Preprocessing
+# Assuming your images are grayscale and have fixed dimensions.
+
+# Step 5: Handling Overfitting
+# You can add more regularization techniques here.
+
+# Step 6: Model Training
+model.compile(optimizer=optimizers.Adam(), loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Step 7: Evaluation Metrics
+# Character or word accuracy can be used for OCR tasks.
+
+# Train the model
+train_datagen = ImageDataGenerator(rescale=1./255)
+validation_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(
+    'path/to/train',
+    target_size=(height, width),
+    batch_size=batch_size,
+    class_mode='categorical')
+
+validation_generator = validation_datagen.flow_from_directory(
+    'path/to/validation',
+    target_size=(height, width),
+    batch_size=batch_size,
+    class_mode='categorical')
+
+model.fit(train_generator, epochs=num_epochs, validation_data=validation_generator)
